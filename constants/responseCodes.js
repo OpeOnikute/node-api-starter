@@ -6,5 +6,6 @@ module.exports = {
     noParamFound: 'E005',
     errorUpdating: 'E006',
     errorSaving: 'E007',
-    paramsNotCreated: 'E008'
+    paramsNotCreated: 'E008',
+    invalidParams: 'E009'
 };

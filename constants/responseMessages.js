@@ -22,5 +22,6 @@ module.exports = {
     errorUpdating: 'An error occurred while updating. Please try again',
     errorSaving: (param) => {
         return 'Sorry, we could not save this ' + param;
-    }
+    },
+    invalidParams: 'Invalid parameter(s)'
 };
