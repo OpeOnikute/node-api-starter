@@ -7,19 +7,19 @@ const dbBase = process.env.DB_BASE;
 module.exports = {
     db: {
         development: {
-            url: 'mongodb://' + dbUser + ':' + dbPassword + '@localhost/t-api',
+            url: `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
             port: 5000
         },
         test: {
-            url: 'mongodb://' + dbUser + ':' + dbPassword + '@localhost/t-api-test',
+            url: `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
             port: 5000
         },
         staging: {
-            url: 'mongodb://' + dbUser + ':' + dbPassword + '@' + dbBase,
+            url: `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
             port: 5300
         },
         production: {
-            url: 'mongodb://' + dbUser + ':' + dbPassword + '@' + dbBase,
+            url: `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
             port: 5300
         }
     },

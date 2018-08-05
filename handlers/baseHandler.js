@@ -19,6 +19,7 @@ class BaseHandler {
     constructor (){}
 
     static getJSON (url, params, callback){
+      
         base_request.get({url: url, dataType: 'json'},
             function(err, response){
                 if(err){
