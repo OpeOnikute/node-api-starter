@@ -1,7 +1,9 @@
 # Node ExpressJS API Starter
+
 Lightweight starter for a Node JSON API.
 
 ## Features
+
 - ES6 Syntax
 - JSON Requests (POST, PUT, GET, DELETE)
 - Security (Helmet, Cors, Endpoint data validation)
@@ -11,6 +13,7 @@ Lightweight starter for a Node JSON API.
 - .env file support
 
 ## How to install
+
 - Clone the repo.
 - In your command prompt or console, enter `npm install`
 - Set up your local Mongo database (Create a user and password for the db 't-api').
@@ -19,6 +22,7 @@ Lightweight starter for a Node JSON API.
 - Please don't commit your actual environment variables in the `.env` file. It's not secure.
 
 ## How to seed the database
+
 - The database seeding uses the npm package `mongoose-data-seed`. The seeder files are in the folder `seeders`.
 - To run the test seed, type `md-seed run` into your console.
 - To create a new `users` seed, type `md-seed g users`.
@@ -27,8 +31,14 @@ Lightweight starter for a Node JSON API.
 - NB: The database config is in the `md-seed-config` file, and it used the same environment variables used to run the app.
 
 ## Contributions
+
 - Create a separate branch in your fork.
 - Push to that branch, and create a PR to the `dev` branch of this repo.
 
 ## TODO
+
 - Add Mongo local setup instructions to README.
+
+### Update
+
+I'm working on a new version that uses `restify`, `joi`, async/await patterns, services, dependency injectors etc. It's currently pushed to the `restify`. Feel free to check it out there.
