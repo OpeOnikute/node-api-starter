@@ -41,4 +41,4 @@ Lightweight starter for a Node JSON API.
 
 ### Update
 
-I'm working on a new version that uses `restify`, `joi`, async/await patterns, services, dependency injectors etc. It's currently pushed to the `restify`. Feel free to check it out there.
+I'm working on a new version that uses `restify`, `joi`, async/await patterns, services, dependency injectors etc. It's currently pushed to the `restify` branch. Feel free to check it out there.

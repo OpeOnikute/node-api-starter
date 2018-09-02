@@ -8,13 +8,7 @@ module.exports = {
         return 'Sorry, We could not find this ' + param + '.';
     },
     paramAlreadyExists: (param, paramName) => {
-        let response = 'This ' + param + ' already exists.';
-
-        if (paramName) {
-            response += (': ' + paramName);
-        }
-
-        return response;
+        return `Sorry, this ${param} ${paramName || ''} already exists.`;
     },
     noParamFound: (param) => {
         return 'No ' + param + ' was found';

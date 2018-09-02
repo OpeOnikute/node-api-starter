@@ -4,8 +4,9 @@ const responseMessages = require('../constants/responseMessages');
 const responseCodes = require('../constants/responseCodes');
 const constants = require('../constants/constants');
 
-module.exports = {
+class UserHandler {
 
+    constructor () {}
     /**
      * @param res
      * @param userId
@@ -13,7 +14,7 @@ module.exports = {
      * @param options
      * @param callback
      */
-    getUserById: function (res, userId, sendError, callback, options) {
+    static getUserById (res, userId, sendError, callback, options) {
 
         User.findById(userId, '-password')
             .populate('programme')
@@ -46,7 +47,7 @@ module.exports = {
                     callback(false);
                 }
             });
-    },
+    }
 
     /**
      * @param res
@@ -54,7 +55,7 @@ module.exports = {
      * @param callback
      * @param options
      */
-    getUserByEmail: function (res, email, callback, options) {
+    static getUserByEmail (res, email, callback, options) {
 
         User.findOne({'email': email})
             .populate('programme')
@@ -66,7 +67,9 @@ module.exports = {
                 }
                 callback(null, user);
             }).catch(err => {
-                callback(err, null);
-            });
+            callback(err, null);
+        });
     }
-};
+}
+
+module.exports = UserHandler;
