@@ -1,28 +1,21 @@
 const dotenv = require('dotenv').config(); //require env variables to make file independent
 
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbBase = process.env.DB_BASE;
-const mongoURI = process.env.MONGODB_URI;
-
 module.exports = {
-    db: {
-        development: {
-            url: `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
-            port: 5000
-        },
-        test: {
-            url: `mongodb://${dbUser}:${dbPassword}@localhost/j-test`,
-            port: 5000
-        },
-        staging: {
-            url: mongoURI || `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
-            port: 5300
-        },
-        production: {
-            url: mongoURI || `mongodb://${dbUser}:${dbPassword}@${dbBase}`,
-            port: 5300
-        }
-    },
-    secret: process.env.SECRET
+  app: {
+    name: process.env.APP_NAME,
+    port: process.env.APP_PORT || 8000,
+    environment: process.env.APPLICATION_ENV,
+    logpath: process.env.LOG_PATH
+  },
+  mongo: {
+    port: process.env.DB_PORT,
+    host: process.env.DB_HOST,
+    name: process.env.DB_NAME
+  },
+  application_logging: {
+    file: process.env.LOG_PATH,
+    level: process.env.LOG_LEVEL || 'info',
+    console: process.env.LOG_ENABLE_CONSOLE || true
+  },
+  secret: process.env.SECRET
 };

@@ -18,10 +18,16 @@
     "express-validator": "^5.2.0",
     "helmet": "^3.12.1",
     "http-errors": "~1.6.2",
+    "http-status": "^1.2.0",
     "jade": "~1.11.0",
-    "mongoose": "^5.1.6",
+    "joi": "^13.6.0",
+    "mongoose": "^5.2.12",
     "mongoose-paginate": "^5.0.3",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "restify": "^7.2.1",
+    "restify-errors": "^6.1.1",
+    "restify-url-semver": "^1.1.1",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.5"

@@ -1,0 +1,15 @@
+{ message: 'Database Connection was Successful',
+  level: 'info',
+  label: 'Birthdates API',
+  timestamp: '2018-09-02T12:42:03.657Z',
+  [Symbol(level)]: 'info' }
+{ message: 'User fetched Successfully',
+  level: 'info',
+  label: 'Birthdates API',
+  timestamp: '2018-09-02T12:42:09.598Z',
+  [Symbol(level)]: 'info' }
+{ message: 'Database Connection Disconnected',
+  level: 'info',
+  label: 'Birthdates API',
+  timestamp: '2018-09-02T12:44:10.377Z',
+  [Symbol(level)]: 'info' }
