@@ -16,18 +16,6 @@ const userSchema = new Schema({
         trim: true,
         default: null
     },
-    nickName: {
-        type: String,
-        trim: true,
-        default: null
-    },
-    dob: {
-        type: Date
-    },
-    matricNo: {
-        type: String,
-        unique: true
-    },
     email: {
         type: String,
         required: true,

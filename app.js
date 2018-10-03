@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const expressValidator = require('express-validator');
 const paginate = require('express-paginate');
 const cors = require('cors');
 
@@ -21,22 +20,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(expressValidator({
-    customValidators: {
-        isArray: function(value) {
-            return Array.isArray(value);
-        },
-        isText: function (value) {
-            return typeof value === 'string';
-        },
-        inArray: function (value, array) {
-            return array.indexOf(value) > -1;
-        },
-        isObject: function (value) {
-            return typeof value === 'object';
-        }
-    }
-}));
 
 app.use('/', endpoints);
 
