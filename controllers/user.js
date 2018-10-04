@@ -15,65 +15,39 @@ module.exports = {
    * @param res
    * @returns {*}
    */
-  createUser: (req, res) => {
+  createUser: async (req, res) => {
     let params = req.body;
 
-    //Check if a user with that email already exists
-    userHandler
-      .getUserByEmail(params.email)
-      .then(existingUser => {
-        utils.sendError(
+    try {
+      const existingUser = await userHandler.getUserByEmail(params.email);
+
+      if (existingUser) {
+        return utils.sendError(
           res,
           responseMessages.paramAlreadyExists('user', 'email'),
           responseCodes.paramAlreadyExists,
           400
         );
-      })
-      .catch(err => {
-        if (err) {
-          return utils.sendError(
-            res,
-            responseMessages.internalServerError,
-            responseCodes.internalServerError,
-            500,
-            err
-          );
-        }
+      }
 
-        const user = new User({
-          firstName: params.firstName,
-          lastName: params.lastName,
-          password: params.password,
-          email: params.email
-        });
-
-        baseController.saveModelObj(
-          res,
-          user,
-          responseMessages.paramsNotCreated('user'),
-          responseCodes.paramsNotCreated,
-          true,
-          true
-        );
+      const user = new User({
+        firstName: params.firstName,
+        lastName: params.lastName,
+        password: params.password,
+        email: params.email
       });
-  },
 
-  getAllUsers: (req, res) => {
-    User.find({})
-      .exec()
-      .then(users => {
-        if (!users.length) {
-          return utils.sendError(
-            res,
-            responseMessages.noParamFound('user'),
-            responseCodes.noParamFound,
-            400
-          );
-        }
-
-        utils.sendSuccess(res, users);
-      })
-      .catch(err => {
+      baseController.saveModelObj(
+        res,
+        user,
+        responseMessages.paramsNotCreated('user'),
+        responseCodes.paramsNotCreated,
+        true,
+        true
+      );
+    } catch (e) {
+      console.error(e);
+      if (err) {
         return utils.sendError(
           res,
           responseMessages.internalServerError,
@@ -81,7 +55,24 @@ module.exports = {
           500,
           err
         );
-      });
+      }
+    }
+  },
+
+  /** */
+  getAllUsers: async (req, res) => {
+    try {
+      const users = await User.find({}).exec();
+      utils.sendSuccess(res, users);
+    } catch (err) {
+      return utils.sendError(
+        res,
+        responseMessages.internalServerError,
+        responseCodes.internalServerError,
+        500,
+        err
+      );
+    }
   },
 
   /**
@@ -90,23 +81,8 @@ module.exports = {
    * @param res
    */
   updateUser: (req, res) => {
-    const userId = req.user._id;
-
     const skipUpdate = ['status', 'createdAt', 'updatedAt'];
 
-    userHandler.getUserById(res, userId, true, user => {
-      if (!user) {
-        return;
-      }
-
-      baseController.updateModelObj(
-        res,
-        req.body,
-        user,
-        skipUpdate,
-        true,
-        true
-      );
-    });
+    baseController.updateModelObj(res, req.body, user, skipUpdate, true, true);
   }
 };

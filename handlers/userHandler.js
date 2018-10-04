@@ -64,9 +64,8 @@ class UserHandler {
         .lean(options ? options.lean || false : false)
         .exec()
         .then(user => {
-          console.log(user);
           if (!user) {
-            return reject(null);
+            return resolve(null);
           }
           resolve(user);
         })
