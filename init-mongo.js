@@ -10,6 +10,8 @@ db.createUser({
   }]
 });
 
+db = new Mongo().getDB("node-api-starter");
+
 db.createUser({
     user: "opeo",
     pwd: "root",
