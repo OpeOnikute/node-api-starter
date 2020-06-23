@@ -10,5 +10,7 @@ router.get('/', userController.getAllUsers);
 router.post('/signup', validateRequest, userController.signup);
 router.post('/login', validateRequest, userController.login);
 router.put('/', validateRequest, userController.updateUser);
+router.post('/forgot-password', validateRequest, userController.forgotPassword);
+router.post('/change-password', validateRequest, userController.changePassword);
 
 module.exports = router;

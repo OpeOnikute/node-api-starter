@@ -11,6 +11,8 @@ Lightweight starter for a Node JSON API.
 - Code constants
 - DB Config support
 - .env file support
+- Password management
+- Winston Logging
 
 ## How to install
 
@@ -35,16 +37,18 @@ Lightweight starter for a Node JSON API.
 - Create a separate branch in your fork.
 - Push to that branch, and create a PR to the `dev` branch of this repo.
 
-## TODO
-
-- Add Mongo local setup instructions to README.
-
 ### Update
 
 I'm working on a new version that uses `restify`, `joi`, async/await patterns, services, dependency injectors etc. It's currently pushed to the `restify` branch. Feel free to check it out there.
 
 # TODO
+- Add Mongo local setup instructions to README.
 - Add tests
 - Password management
 - Common API responses function
 - Can this be a package that is imported?
+- Test:
+  - signup
+  - login
+  - forgot pwd
+  - change pwd

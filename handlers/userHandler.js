@@ -75,6 +75,13 @@ class UserHandler {
         });
     });
   }
+
+  static getUserByToken(token, cb, options) {
+    // TODO: Make this more secure.
+    return User.findOne({'resetToken': token})
+        .lean(options ? (options.lean ||false) : false)
+        .exec();
+  }
 }
 
 module.exports = UserHandler;

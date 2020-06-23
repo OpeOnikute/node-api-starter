@@ -154,4 +154,78 @@ module.exports = {
         );
     }
   },
+
+      /**
+     * @param req
+     * @param res
+     */
+    forgotPassword: async function (req, res) {
+
+        try {
+            var payload = req.body;
+
+            var email = payload.email;
+
+            const user = await userHandler.getUserByEmail(res, email);
+            if (!user) {
+                return utils.sendError(res, responseMessages.paramNotFound(constants.user), responseCodes.paramNotFound, 400);
+            }
+
+            user.resetToken = jwt.sign({email: user.email}, config.secret, {
+                expiresIn: '24h'
+            });
+
+            const res = await user.save();
+
+            // send email 
+            const ctx = { firstName: user.firstName, _id: user._id, resetToken: user.resetToken };
+
+            // TODO: Make this async
+            emailHandler.sendEmail(user.email,  'Reset your password', ctx, constants.forgotPasswordTemplate, null, null, function (log) {});
+
+            utils.sendSuccess(res, { user: user });
+
+        } catch (err) {
+            // TODO - send common error
+            logHandler.log("error", err);
+            utils.sendError(
+                res,
+                responseMessages.internalServerError,
+                responseCodes.internalServerError,
+                500,
+                err
+            );
+        }
+    },
+
+    changePassword:  async function (req, res) {
+
+        try {
+            var payload = req.body;
+            var token = req.params.resetToken;
+
+            const user = await userHandler.getUserByToken(token);
+            
+            if (!user) {
+                return utils.sendError(res, responseMessages.paramNotFound('user'), responseCodes.paramNotFound, 400);
+            }
+
+            user.password = payload.password;
+            user.resetToken = null;
+
+            baseController.saveModelObj(res, user, responseMessages.errorSaving('user'),
+                responseCodes.errorSaving, true, true);
+                
+        } catch (err) {
+            // TODO - send common error
+            logHandler.log("error", err);
+            utils.sendError(
+                res,
+                responseMessages.internalServerError,
+                responseCodes.internalServerError,
+                500,
+                err
+            );
+        }
+    },
 };
