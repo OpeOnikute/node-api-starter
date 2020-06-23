@@ -23,5 +23,7 @@ module.exports = {
             port: 5300
         }
     },
-    secret: process.env.SECRET
+    secret: process.env.SECRET,
+    mailgunDomain: process.env.MAILGUN_DOMAIN,
+    mailgunKey: process.env.MAILGUN_KEY
 };

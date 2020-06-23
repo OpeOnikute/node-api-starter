@@ -38,9 +38,7 @@ const userSchema = new Schema({
     adminRole:{
         type: Number,
         default: 0,
-        enum: {
-            values: [0, 1, 2, 3]
-        }
+        enum: [0, 1, 2, 3]
     },
     confirmationToken: {
         type: String,
@@ -53,9 +51,7 @@ const userSchema = new Schema({
     status: {
         type: String,
         default: 'enabled',
-        enum: {
-            values: ['enabled', 'disabled', 'blocked', 'pending']
-        }
+        enum: ['enabled', 'disabled', 'blocked', 'pending']
     },
     createdAt: {
         type: Date,
@@ -87,7 +83,7 @@ userSchema.pre('findOneAndUpdate', function(next) {
 });
 
 userSchema.pre('find', function() {
-    this.where({status: {$ne: ['disabled', 'blocked']}});
+    this.where({status: {$nin: ['disabled', 'blocked']}});
 });
 
 /**

@@ -2,6 +2,8 @@ var path = require("path");
 var nodemailer = require('nodemailer');
 
 var ejs = require("ejs");
+var config = require("../config/config")
+
 
 var mailgunUser = process.env.MAILGUN_USER;
 var mailgunPass = process.env.MAILGUN_PASSWORD;
@@ -18,7 +20,6 @@ var utils = require('../lib/utils');
 var constants = require('../constants/constants');
 var responseMessages = require('../constants/responseMessages');
 var responseCodes = require('../constants/responseCodes');
-var EmailLog = require('../models/emailLog');
 
 var exports = {
 
@@ -97,17 +98,17 @@ var exports = {
      */
     sendEmail: function (emailAddress, emailSubject, context, templateName, content, adminId, callback) {
 
-        var emailSchema = new EmailLog({
+        var emailSchema = {
             to: emailAddress,
             subject: emailSubject,
             status: constants.failed,
             params: context,
             sender: adminId ? 'admin' : 'automatic',
             adminId: adminId || null
-        });
+        };
 
         var mainOptions = {
-            from: '"The 13th Set" cudevelopers@gmail.com',
+            // from: '',
             to: emailAddress,
             subject: emailSubject
         };
@@ -118,13 +119,6 @@ var exports = {
                 if (err) {
                     //figure out what to do if the email fails. Probably cache and send it later.
                     emailSchema.errorMessage = err;
-
-                    emailSchema.save(function (err) {
-                        if(err) {
-                            console.log(err);
-                        }
-                    });
-
                     callback(emailSchema);
 
                 } else {
@@ -140,12 +134,6 @@ var exports = {
                         } else {
                             emailSchema.status = constants.success;
                         }
-
-                        emailSchema.save(function (err) {
-                            if(err) {
-                                console.log(err);
-                            }
-                        });
 
                         callback(emailSchema);
                     });
@@ -165,58 +153,9 @@ var exports = {
                     emailSchema.status = constants.success;
                 }
 
-                emailSchema.save(function (err) {
-                    if(err) {
-                        console.log(err);
-                    }
-                });
-
                 callback(emailSchema);
             });
         }
-    },
-
-    /**
-     *
-     * @param res
-     * @param sender
-     * @param adminId
-     * @param options
-     */
-    getSentEmails:  function (res, sender, adminId, options) {
-
-        var params = {};
-
-        if (sender){
-            params.sender = sender === constants.admin ? sender : constants.automatic;
-            if (sender === constants.admin && adminId !== false) {
-                params.adminId = adminId;
-            }
-        }
-
-        //get the specific admin's emails
-
-        EmailLog.paginate(params, options, function (err, emails) {
-
-            if (err) {
-                utils.sendError(res, responseMessages.internalServerError, responseCodes.internalServerError, 500, err);
-                return;
-            }
-
-            if (!emails) {
-                utils.sendError(res, responseMessages.noParamFound(constants.emailPlural), responseCodes.noParamFound, 404);
-                return;
-            }
-
-            var pagination = {
-                pageNumber: emails.page,
-                itemsPerPage: emails.limit,
-                prev: res.locals.paginate.href(true),
-                next: res.locals.paginate.href()
-            };
-
-            utils.sendSuccess(res, emails, false, pagination);
-        });
     }
 };
 

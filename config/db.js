@@ -8,6 +8,7 @@
     const ENV = process.env.NODE_ENV || 'development';
     const DB_URI = config.db[ENV].url;
 
+    console.log(DB_URI);
     mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true }).catch(function (err) {
         console.error(err.message);
         process.exit(1);

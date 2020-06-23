@@ -1,6 +1,10 @@
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/users');
 
 const utils = require('../lib/utils');
+const config = require('../config/config');
+const constants = require('../constants/constants');
 
 const baseController = require('../controllers/base');
 const responseMessages = require('../constants/responseMessages');
@@ -8,6 +12,7 @@ const responseCodes = require('../constants/responseCodes');
 
 const userHandler = require('../handlers/userHandler');
 const logHandler = require('../handlers/logHandler');
+const emailHandler = require('../handlers/emailHandler');
 
 module.exports = {
   /**
@@ -46,15 +51,8 @@ module.exports = {
         true,
         true
       );
-    } catch (e) {
-      logHandler.log("error", e);
-      utils.sendError(
-        res,
-        responseMessages.internalServerError,
-        responseCodes.internalServerError,
-        500,
-        err
-      );
+    } catch (err) {
+        utils.sendServerError(res, err);
     }
   },
 
@@ -64,13 +62,7 @@ module.exports = {
       const users = await User.find({}).exec();
       utils.sendSuccess(res, users);
     } catch (err) {
-      return utils.sendError(
-        res,
-        responseMessages.internalServerError,
-        responseCodes.internalServerError,
-        500,
-        err
-      );
+      utils.sendServerError(res, err);
     }
   },
 
@@ -143,15 +135,7 @@ module.exports = {
         utils.sendSuccess(res, user);
 
     } catch (err) {
-        // TODO - send common error
-        logHandler.log("error", err);
-        utils.sendError(
-            res,
-            responseMessages.internalServerError,
-            responseCodes.internalServerError,
-            500,
-            err
-        );
+        utils.sendServerError(res, err);
     }
   },
 
@@ -166,7 +150,7 @@ module.exports = {
 
             var email = payload.email;
 
-            const user = await userHandler.getUserByEmail(res, email);
+            const user = await userHandler.getUserByEmail(email);
             if (!user) {
                 return utils.sendError(res, responseMessages.paramNotFound(constants.user), responseCodes.paramNotFound, 400);
             }
@@ -175,26 +159,20 @@ module.exports = {
                 expiresIn: '24h'
             });
 
-            const res = await user.save();
+            await user.save();
 
             // send email 
-            const ctx = { firstName: user.firstName, _id: user._id, resetToken: user.resetToken };
+            const ctx = { baseUrl: null, firstName: user.firstName, _id: user._id, resetToken: user.resetToken };
 
             // TODO: Make this async
-            emailHandler.sendEmail(user.email,  'Reset your password', ctx, constants.forgotPasswordTemplate, null, null, function (log) {});
+            emailHandler.sendEmail(user.email,  'Reset your password', ctx, constants.forgotPasswordTemplate, null, null, function (log) {
+                console.log(log);
+            });
 
             utils.sendSuccess(res, { user: user });
 
         } catch (err) {
-            // TODO - send common error
-            logHandler.log("error", err);
-            utils.sendError(
-                res,
-                responseMessages.internalServerError,
-                responseCodes.internalServerError,
-                500,
-                err
-            );
+            utils.sendServerError(res, err);
         }
     },
 
@@ -217,15 +195,7 @@ module.exports = {
                 responseCodes.errorSaving, true, true);
                 
         } catch (err) {
-            // TODO - send common error
-            logHandler.log("error", err);
-            utils.sendError(
-                res,
-                responseMessages.internalServerError,
-                responseCodes.internalServerError,
-                500,
-                err
-            );
+            utils.sendServerError(res, e);
         }
     },
 };

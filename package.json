@@ -25,6 +25,7 @@
     "mongoose": "^5.9.20",
     "mongoose-paginate": "^5.0.3",
     "morgan": "~1.9.1",
+    "nodemailer": "^4.5.0",
     "winston": "^3.3.2"
   },
   "devDependencies": {
