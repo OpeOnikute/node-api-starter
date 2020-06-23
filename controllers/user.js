@@ -15,7 +15,7 @@ module.exports = {
    * @param res
    * @returns {*}
    */
-  createUser: async (req, res) => {
+  signup: async (req, res) => {
     let params = req.body;
 
     try {
@@ -84,5 +84,85 @@ module.exports = {
     const skipUpdate = ['status', 'createdAt', 'updatedAt'];
 
     baseController.updateModelObj(res, req.body, user, skipUpdate, true, true);
-  }
+  },
+
+    /**
+   * @param req
+   * @param res
+   */
+  login: async function(req, res) {
+    let payload = req.body;
+
+    let pass = payload.password;
+    let email = payload.email;
+
+    try {
+        const user = await userHandler.getUserByEmail(email, { lean: true })
+        if (!user) {
+            return utils.sendError(
+                res,
+                responseMessages.paramNotFound("user"),
+                responseCodes.paramNotFound,
+                400
+            );
+        }
+
+        //need to reassign the method cause the object received is lean.
+        user.comparePassword = utils.comparePassword;
+
+        // test a matching password
+        user.comparePassword(pass, function(err, isMatch) {
+            if (err) {
+                return utils.sendError(
+                    res,
+                    responseMessages.internalServerError,
+                    responseCodes.internalServerError,
+                    500,
+                    err
+                );
+            }
+
+            if (!isMatch) {
+                utils.sendError(
+                    res,
+                    responseMessages.failedAuthentication,
+                    responseCodes.failedAuthentication,
+                    400,
+                    err
+                );
+                return;
+            }
+
+            // restrict admin access to only the admin dashboard.
+            if (user.isAdmin) {
+                utils.sendError(
+                res,
+                responseMessages.accessDenied,
+                responseCodes.accessDenied,
+                400
+                );
+                return;
+            }
+
+            user.token = jwt.sign(user, config.secret, {
+                expiresIn: "24h"
+            });
+
+            delete user["password"];
+
+            utils.sendSuccess(res, user);
+        });
+
+    } catch (err) {
+        // TODO - send common error
+        console.error(err)
+        return utils.sendError(
+            res,
+            responseMessages.internalServerError,
+            responseCodes.internalServerError,
+            500,
+            err
+        );
+    }
+  },
 };

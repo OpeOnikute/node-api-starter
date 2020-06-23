@@ -7,7 +7,8 @@ const validateRequest = SchemaValidator(true);
 const userController = require('../controllers/user');
 
 router.get('/', userController.getAllUsers);
-router.post('/', validateRequest, userController.createUser);
+router.post('/signup', validateRequest, userController.signup);
+router.post('/login', validateRequest, userController.login);
 router.put('/', validateRequest, userController.updateUser);
 
 module.exports = router;

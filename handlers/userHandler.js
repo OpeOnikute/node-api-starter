@@ -70,6 +70,7 @@ class UserHandler {
           resolve(user);
         })
         .catch(err => {
+            console.error(err)
           reject(err);
         });
     });
