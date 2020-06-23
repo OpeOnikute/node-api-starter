@@ -48,3 +48,4 @@ I'm working on a new version that uses `restify`, `joi`, async/await patterns, s
 - Password management
 - Common API responses function
 - Can this be a package that is imported?
+- Logging with Winston

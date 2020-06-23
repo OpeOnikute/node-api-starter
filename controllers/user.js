@@ -111,47 +111,37 @@ module.exports = {
         user.comparePassword = utils.comparePassword;
 
         // test a matching password
-        user.comparePassword(pass, function(err, isMatch) {
-            if (err) {
-                return utils.sendError(
-                    res,
-                    responseMessages.internalServerError,
-                    responseCodes.internalServerError,
-                    500,
-                    err
-                );
-            }
+        const matched = await user.comparePassword(pass);
+        
+        if (!matched) {
+            utils.sendError(
+                res,
+                responseMessages.failedAuthentication,
+                responseCodes.failedAuthentication,
+                400,
+                err
+            );
+            return;
+        }
 
-            if (!isMatch) {
-                utils.sendError(
-                    res,
-                    responseMessages.failedAuthentication,
-                    responseCodes.failedAuthentication,
-                    400,
-                    err
-                );
-                return;
-            }
-
-            // restrict admin access to only the admin dashboard.
-            if (user.isAdmin) {
-                utils.sendError(
+        // restrict admin access to only the admin dashboard.
+        if (user.isAdmin) {
+            utils.sendError(
                 res,
                 responseMessages.accessDenied,
                 responseCodes.accessDenied,
                 400
-                );
-                return;
-            }
+            );
+            return;
+        }
 
-            user.token = jwt.sign(user, config.secret, {
-                expiresIn: "24h"
-            });
-
-            delete user["password"];
-
-            utils.sendSuccess(res, user);
+        user.token = jwt.sign(user, config.secret, {
+            expiresIn: "24h"
         });
+
+        delete user["password"];
+
+        utils.sendSuccess(res, user);
 
     } catch (err) {
         // TODO - send common error
