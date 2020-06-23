@@ -7,6 +7,7 @@ const responseMessages = require('../constants/responseMessages');
 const responseCodes = require('../constants/responseCodes');
 
 const userHandler = require('../handlers/userHandler');
+const logHandler = require('../handlers/logHandler');
 
 module.exports = {
   /**
@@ -46,16 +47,14 @@ module.exports = {
         true
       );
     } catch (e) {
-      console.error(e);
-      if (err) {
-        return utils.sendError(
-          res,
-          responseMessages.internalServerError,
-          responseCodes.internalServerError,
-          500,
-          err
-        );
-      }
+      logHandler.log("error", e);
+      utils.sendError(
+        res,
+        responseMessages.internalServerError,
+        responseCodes.internalServerError,
+        500,
+        err
+      );
     }
   },
 
@@ -145,8 +144,8 @@ module.exports = {
 
     } catch (err) {
         // TODO - send common error
-        console.error(err)
-        return utils.sendError(
+        logHandler.log("error", err);
+        utils.sendError(
             res,
             responseMessages.internalServerError,
             responseCodes.internalServerError,

@@ -24,7 +24,8 @@
     "lodash": "^4.17.13",
     "mongoose": "^5.9.20",
     "mongoose-paginate": "^5.0.3",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "winston": "^3.3.2"
   },
   "devDependencies": {
     "mongoose-data-seed": "^1.0.6",
