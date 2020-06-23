@@ -4,22 +4,20 @@ var nodemailer = require('nodemailer');
 var ejs = require("ejs");
 var config = require("../config/config")
 
-
 var mailgunUser = process.env.MAILGUN_USER;
 var mailgunPass = process.env.MAILGUN_PASSWORD;
 
 var transporter = nodemailer.createTransport({
-    service: 'Mailgun',
+    host: 'smtp.eu.mailgun.org',
+    port: 465,
+    secure: true, // true for 465, false for other ports
     auth: {
         user: mailgunUser,
         pass: mailgunPass
     }
 });
 
-var utils = require('../lib/utils');
 var constants = require('../constants/constants');
-var responseMessages = require('../constants/responseMessages');
-var responseCodes = require('../constants/responseCodes');
 
 var exports = {
 
@@ -108,7 +106,7 @@ var exports = {
         };
 
         var mainOptions = {
-            // from: '',
+            from: config.emailFrom,
             to: emailAddress,
             subject: emailSubject
         };
