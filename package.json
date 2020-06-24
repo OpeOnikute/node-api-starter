@@ -16,7 +16,7 @@
     "express": "~4.16.0",
     "express-paginate": "^1.0.0",
     "express-validator": "^5.2.0",
-    "helmet": "^3.12.1",
+    "helmet": "^3.23.2",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "joi": "^13.7.0",
