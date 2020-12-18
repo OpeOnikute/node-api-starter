@@ -2,13 +2,21 @@
 
 const _ = require('lodash');
 const Joi = require('joi');
-const Schemas = require('../lib/userSchema');
+const UserSchema = require('../lib/userSchema');
+const AdminSchema = require('../lib/adminSchema');
 const utils = require('../lib/utils');
 
 const responseMessages = require('../constants/responseMessages');
 const responseCodes = require('../constants/responseCodes');
 
-module.exports = (useJoiError = false) => {
+module.exports = (schemaType = 'user', useJoiError = false) => {
+  const schemaMap = {
+    admin: AdminSchema,
+    user: UserSchema,
+  };
+
+  const Schemas = schemaMap[schemaType];
+
   // useJoiError determines if we should respond with the base Joi error
   // boolean: defaults to false
   const _useJoiError = _.isBoolean(useJoiError) && useJoiError;
@@ -28,10 +36,11 @@ module.exports = (useJoiError = false) => {
     const route = req.route.path;
     const method = req.method.toLowerCase();
 
-    if (_.includes(_supportedMethods, method) && _.has(Schemas, route)) {
+    if (_.includes(_supportedMethods, method) && _.has(Schemas, method)) {
       // get schema for the current route
-      const _schema = _.get(Schemas, route);
-      const _dataPath = method === 'get' ? req.params : req.body;
+      const _methodSchemas = _.get(Schemas, method);
+      const _schema = _.get(_methodSchemas, route);
+      const _dataPath = method === 'get' ? req.query : req.body;
 
       if (_schema) {
         // Validate req.body using the schema and validation options
@@ -55,7 +64,7 @@ module.exports = (useJoiError = false) => {
               // Custom Error
               utils.sendError(
                 res,
-                responseMessages.invalidParams,
+                responseMessages.invalidParams(JoiError.details),
                 responseCodes.invalidParams,
                 422,
                 JoiError

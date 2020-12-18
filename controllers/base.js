@@ -17,10 +17,12 @@ module.exports = {
      */
     verifyAccessToken: function(req, res, next){
 
-        const token = req.headers['authorization'] || req.body.token;
+        let token = req.headers['authorization'] || req.body.token;
         if (!token) {
             return utils.sendError(res, responseMessages.accessDenied, responseCodes.accessDenied, 400);
         }
+
+        token = token.replace("Bearer ", "");
 
         jwt.verify(token, config.secret, function (err, decodedToken) {
             if (err) {

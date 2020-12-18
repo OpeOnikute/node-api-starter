@@ -26,5 +26,6 @@ module.exports = {
     secret: process.env.SECRET,
     emailFrom: process.env.EMAIL_FROM,
     mailgunDomain: process.env.MAILGUN_DOMAIN,
-    mailgunKey: process.env.MAILGUN_KEY
+    mailgunKey: process.env.MAILGUN_KEY,
+    adminPaginateLimit: process.env.ADMIN_PAGINATION_LIMIT || 20
 };
