@@ -29,7 +29,7 @@
     "winston": "^3.3.2"
   },
   "devDependencies": {
-    "mongoose-data-seed": "^1.0.6",
+    "mongoose-data-seed": "^2.1.6",
     "nodemon": "^1.17.5"
   }
 }
